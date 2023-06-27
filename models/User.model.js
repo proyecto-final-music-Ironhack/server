@@ -18,9 +18,25 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
+    username: {
+      type: String,
+      required: [true, "Username is required"],
+    },
+    image: {
+      type: String,
+      default:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
+    },
+    favoriteArtists: [Object],
+    attendedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
+    savedSongs: [Object],
+    playlists: [{ type: Schema.Types.ObjectId, ref: "Playlist" }],
+    notification: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );
