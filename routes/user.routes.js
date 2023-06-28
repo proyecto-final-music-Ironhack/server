@@ -2,7 +2,18 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User.model");
 
-// GET USER
+// GET ALL USERS
+
+router.get("/", async (req, res, next) => {
+  try {
+    const users = await User.find();
+    return res.status(200).json(users);
+  } catch (error) {
+    next(err);
+  }
+});
+
+// GET ONE USER
 
 router.get("/:id", async (req, res, next) => {
   try {
@@ -18,8 +29,10 @@ router.get("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const {id} = req.params
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {new: true});
+    const { id } = req.params;
+    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
     return res.status(200).json(updatedUser);
   } catch (error) {
     next(err);
