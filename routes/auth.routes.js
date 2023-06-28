@@ -11,7 +11,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
-router.post("/signup", (req, res, next) => {
+router.post("/signup/", (req, res, next) => {
   const { email, password, name, username } = req.body;
 
   if (email === "" || password === "" || name === "") {
@@ -31,7 +31,6 @@ router.post("/signup", (req, res, next) => {
     });
     return;
   }
-
   // Check the users collection if a user with the same email already exists
   User.findOne({ email })
     .then((foundUser) => {
@@ -51,7 +50,7 @@ router.post("/signup", (req, res, next) => {
       const { email, name, _id, username } = createdUser;
       // Create a new object that doesn't expose the password
       const user = { email, name, _id, username };
-      res.status(201).json({ user: user });
+      res.status(201).json(user);
     })
     .catch((err) => next(err));
 });
