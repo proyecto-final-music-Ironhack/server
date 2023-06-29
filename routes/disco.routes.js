@@ -4,7 +4,6 @@ const dataDiscos = require("../data.json");
 const discoController = require("../controllers/disco.controller");
 
 //POST CREATE DISCOS
-
 router.post("/create-list", discoController.createList);
 
 //POST CREATE DISCO
