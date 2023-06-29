@@ -28,6 +28,15 @@ const EventSchema = new Schema({
     required: [true, "Genre is required."],
   },
   reviews: String,
+  drinksWithEntry: Number,
+  priceOfEntry: {
+    type: Number,
+    required: true,
+  },
+  startTime: {
+    type: Date,
+    required: true,
+  },
 });
 
 module.exports = model("Event", EventSchema);
