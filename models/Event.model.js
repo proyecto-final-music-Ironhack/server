@@ -7,7 +7,7 @@ const EventSchema = new Schema({
   },
   date: {
     type: Date,
-    default: Date.now, // Establecer el valor por defecto como la fecha actual
+    default: Date,
     required: true,
   },
   image: String,
