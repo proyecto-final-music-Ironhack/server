@@ -6,7 +6,7 @@ const DiscoSchema = new Schema({
     type: String,
     required: [true, "Password is required."],
   },
-  idFromAPI:String,
+  idFromAPI: String,
   name: String,
   address: String,
   town: String,

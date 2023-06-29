@@ -1,4 +1,5 @@
 const Disco = require("../models/Disco.model");
+const dataDiscos = require("../data.json");
 
 module.exports.createList = async (req, res, next) => {
   try {
