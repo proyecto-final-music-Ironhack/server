@@ -1,29 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User.model");
+const userController = require("../controllers/user.controller");
 
-// GET USER
+// GET ALL USERS
+router.get("/", userController.list);
 
-router.get("/:id", async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    return res.status(200).json(user);
-  } catch (error) {
-    next(err);
-  }
-});
+// GET ONE USER
+router.get("/:id", userController.detail);
 
 // EDIT USER
-
-router.put("/:id", async (req, res, next) => {
-  try {
-    const {id} = req.params
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {new: true});
-    return res.status(200).json(updatedUser);
-  } catch (error) {
-    next(err);
-  }
-});
+router.put("/:id", userController.update);
 
 module.exports = router;

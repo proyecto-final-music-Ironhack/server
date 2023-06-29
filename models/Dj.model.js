@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema(
+const djSchema = new Schema(
   {
     email: {
       type: String,
@@ -24,11 +24,30 @@ const userSchema = new Schema(
     image: {
       type: String,
       default:
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
+        "https://www.comunidad.madrid/sites/default/files/styles/image_style_16_9/public/aud/turismo/dj.jpg?itok=3lOewu3H",
     },
-    favoriteArtists: [Object],
     attendedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
-    savedSongs: [Object],
+    playlists: [{ type: Schema.Types.ObjectId, ref: "Playlist" }],
+    followers: {
+      type: Number,
+      default: 0,
+    },
+    musicGenre: {
+      type: String,
+      enum: [
+        "Jazz",
+        "Soul",
+        "Pop",
+        "Rock and Roll",
+        "Techno",
+        "Reggeaton",
+        "Hip Hop/Rap",
+        "Funk",
+        "Metal",
+        "Salsa",
+        "Country",
+      ],
+    },
     notification: {
       type: Boolean,
       default: false,
@@ -39,6 +58,6 @@ const userSchema = new Schema(
   }
 );
 
-const User = model("User", userSchema);
+const Dj = model("Dj", djSchema);
 
-module.exports = User;
+module.exports = Dj;
