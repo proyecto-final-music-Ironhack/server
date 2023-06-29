@@ -11,6 +11,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
+
 router.post("/signup/", (req, res, next) => {
 
   const { email, password, name, username } = req.body;
@@ -43,7 +44,7 @@ router.post("/signup/", (req, res, next) => {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
       // Create the new user in the database
-      return User.create({ email, password: hashedPassword, name, username});
+      return User.create({ email, password: hashedPassword, name, username });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
