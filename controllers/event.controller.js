@@ -45,7 +45,7 @@ module.exports.delete = async (req, res, next) => {
   try {
     const { id } = req.params;
     await Event.findByIdAndDelete(id);
-    res.status(200).json({ mensage: "Evento borrado correctamente" });
+    res.status(200).json({ message: "Evento borrado correctamente" });
   } catch (err) {
     next(err);
   }
