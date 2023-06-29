@@ -9,6 +9,10 @@ const DiscoSchema = new Schema({
   web: String,
   latitude: String,
   longitude: String,
+  followers: {
+    type: Number,
+    default: 0,
+  },
 });
 
 module.exports = model("Disco", DiscoSchema);

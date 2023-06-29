@@ -11,7 +11,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
-router.post("/signup", (req, res, next) => {
+router.post("/signup/user", (req, res, next) => {
   const { email, password, name, username } = req.body;
 
   if (email === "" || password === "" || name === "") {
