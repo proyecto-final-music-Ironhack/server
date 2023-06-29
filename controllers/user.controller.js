@@ -30,3 +30,13 @@ module.exports.update = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.delete = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    await User.findByIdAndDelete(id);
+    return res.status(200).json({ mesage: "user deleted" });
+  } catch (err) {
+    next(err);
+  }
+};

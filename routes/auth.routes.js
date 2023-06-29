@@ -6,15 +6,16 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User.model");
+const Dj = require("../models/Dj.model");
+const Disco = require("../models/Disco.model");
 
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
-
-router.post("/signup/", (req, res, next) => {
-
+router.post("/signup/:type", (req, res, next) => {
   const { email, password, name, username } = req.body;
+  const { type } = req.params;
 
   if (email === "" || password === "" || name === "") {
     res.status(400).json({ message: "Provide email, password and name" });
@@ -34,71 +35,78 @@ router.post("/signup/", (req, res, next) => {
     return;
   }
   // Check the users collection if a user with the same email already exists
-  User.findOne({ email })
-    .then((foundUser) => {
-      if (foundUser) {
-        res.status(400).json({ message: "User already exists." });
-        return;
-      }
-      // If email is unique, proceed to hash the password
-      const salt = bcrypt.genSaltSync(saltRounds);
-      const hashedPassword = bcrypt.hashSync(password, salt);
-      // Create the new user in the database
-      return User.create({ email, password: hashedPassword, name, username });
-    })
-    .then((createdUser) => {
-      // Deconstruct the newly created user object to omit the password
-      // We should never expose passwords publicly
-      const { email, name, _id, username } = createdUser;
-      // Create a new object that doesn't expose the password
-      const user = { email, name, _id, username };
-      res.status(201).json(user);
-    })
-    .catch((err) => next(err));
-});
 
-// POST  /auth/login - Verifies email and password and returns a JWT
-router.post("/login", (req, res, next) => {
-  const { email, password } = req.body;
-
-  // Check if email or password are provided as empty string
-  if (email === "" || password === "") {
-    res.status(400).json({ message: "Provide email and password." });
-    return;
-  }
-
-  // Check the users collection if a user with the same email exists
-  User.findOne({ email })
-    .then((foundUser) => {
-      if (!foundUser) {
-        // If the user is not found, send an error response
-        res.status(401).json({ message: "User not found." });
-        return;
-      }
-
-      // Compare the provided password with the one saved in the database
-      const passwordCorrect = bcrypt.compareSync(password, foundUser.password);
-
-      if (passwordCorrect) {
-        // Deconstruct the user object to omit the password
-        const { _id, email, name } = foundUser;
-
-        // Create an object that will be set as the token payload
-        const payload = { _id, email, name };
-
-        // Create a JSON Web Token and sign it
-        const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
-          algorithm: "HS256",
-          expiresIn: "6h",
+  if (type == "user") {
+    User.findOne({ email })
+      .then((foundUser) => {
+        if (foundUser) {
+          res.status(400).json({ message: "User already exists." });
+          return;
+        }
+        // If email is unique, proceed to hash the password
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPassword = bcrypt.hashSync(password, salt);
+        // Create the new user in the database
+        return User.create({ email, password: hashedPassword, name, username });
+      })
+      .then((createdUser) => {
+        // Deconstruct the newly created user object to omit the password
+        // We should never expose passwords publicly
+        const { email, name, _id, username } = createdUser;
+        // Create a new object that doesn't expose the password
+        const user = { email, name, _id, username };
+        res.status(201).json(user);
+      });
+  } else if (type === "dj") {
+    Dj.findOne({ email })
+      .then((foundDj) => {
+        if (foundDj) {
+          res.status(400).json({ message: "Dj already exists." });
+          return;
+        }
+        // If email is unique, proceed to hash the password
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPassword = bcrypt.hashSync(password, salt);
+        // Create the new DJ in the database
+        return Dj.create({ email, password: hashedPassword, name, username });
+      })
+      .then((createdDj) => {
+        // Deconstruct the newly created user object to omit the password
+        // We should never expose passwords publicly
+        const { email, name, _id, username } = createdDj;
+        // Create a new object that doesn't expose the password
+        const dj = { email, name, _id, username };
+        res.status(201).json(dj);
+      });
+  } else if (type === "disco") {
+    Disco.findOne({ email })
+      .then((foundDisco) => {
+        if (foundDisco) {
+          res.status(400).json({ message: "Disco already exists." });
+          return;
+        }
+        // If email is unique, proceed to hash the password
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hashedPassword = bcrypt.hashSync(password, salt);
+        // Create the new disco in the database
+        return Disco.create({
+          email,
+          password: hashedPassword,
+          name,
+          username,
         });
-
-        // Send the token as the response
-        res.status(200).json({ authToken: authToken });
-      } else {
-        res.status(401).json({ message: "Unable to authenticate the user" });
-      }
-    })
-    .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
+      })
+      .then((createdDisco) => {
+        // Deconstruct the newly created disco object to omit the password
+        // We should never expose passwords publicly
+        const { email, name, _id, username } = createdDisco;
+        // Create a new object that doesn't expose the password
+        const disco = { email, name, _id, username };
+        res.status(201).json(disco);
+      });
+  } else {
+    res.status(400).json({ message: "Invalid type specified." });
+  }
 });
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
