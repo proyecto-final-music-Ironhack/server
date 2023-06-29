@@ -1,4 +1,4 @@
-const Dj = require("../models/User.model");
+const Dj = require("../models/Dj.model");
 
 module.exports.list = async (req, res, next) => {
   try {
