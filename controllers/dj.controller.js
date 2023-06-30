@@ -1,5 +1,15 @@
 const Dj = require("../models/Dj.model");
 
+module.exports.create = async (req, res, next) => {
+  try {
+    if (!req.body.name) return res.status(400).json({ mensage: "Bad request" });
+    const dj = await Dj.create(req.body);
+    return res.status(201).json(dj);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.list = async (req, res, next) => {
   try {
     const allDjs = await Dj.find();

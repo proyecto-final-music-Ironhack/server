@@ -1,9 +1,12 @@
 const { Schema, model } = require("mongoose");
-
+const User = require("./User.model");
 const ReviewSchema = new Schema({
   message: String,
-  user: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  date: Date.now,
+  nameUser: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 module.exports = model("Review", ReviewSchema);
