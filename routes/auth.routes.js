@@ -34,6 +34,7 @@ router.post("/signup/:type", (req, res, next) => {
     });
     return;
   }
+  
   // Check the users collection if a user with the same email already exists
 
   if (type == "user") {
@@ -64,17 +65,12 @@ router.post("/signup/:type", (req, res, next) => {
           res.status(400).json({ message: "Dj already exists." });
           return;
         }
-        // If email is unique, proceed to hash the password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(password, salt);
-        // Create the new DJ in the database
         return Dj.create({ email, password: hashedPassword, name, username });
       })
       .then((createdDj) => {
-        // Deconstruct the newly created user object to omit the password
-        // We should never expose passwords publicly
         const { email, name, _id, username } = createdDj;
-        // Create a new object that doesn't expose the password
         const dj = { email, name, _id, username };
         res.status(201).json(dj);
       });
@@ -84,13 +80,13 @@ router.post("/signup/:type", (req, res, next) => {
         if (!foundDisco) {
           res
             .status(400)
-            .json({ message: "Disco no existe, contacta con nosotros." });
+            .json({ message: "Your club is not registered in our database, please contact with us" });
           return;
         }
-        // If email is unique, proceed to hash the password
+        // If Disco matches one from our database...
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(password, salt);
-        // Create the new disco in the database
+        // Update its info adding email and hashed password
         return Disco.findOneAndUpdate(
           { idFromAPI },
           {
@@ -100,10 +96,7 @@ router.post("/signup/:type", (req, res, next) => {
         );
       })
       .then((updatedDisco) => {
-        // Deconstruct the newly created disco object to omit the password
-        // We should never expose passwords publicly
         const { email, name, _id, idFromAPI } = updatedDisco;
-        // Create a new object that doesn't expose the password
         const disco = { email, name, _id, idFromAPI };
         res.status(201).json(disco);
       });
@@ -117,7 +110,6 @@ router.get("/verify", isAuthenticated, (req, res, next) => {
   // If JWT token is valid the payload gets decoded by the
   // isAuthenticated middleware and is made available on `req.payload`
   console.log(`req.payload`, req.payload);
-
   // Send back the token payload object containing the user data
   res.status(200).json(req.payload);
 });
