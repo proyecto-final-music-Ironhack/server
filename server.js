@@ -2,7 +2,7 @@ const app = require("./app");
 const nodemailer = require("nodemailer");
 const fs = require("fs"); //es un modulo de Node que nos permite leer archivos
 
-const htmlContent = fs.readFileSync("../email.html", "utf8");
+const htmlContent = fs.readFileSync("./email.html", "utf8");
 
 // ℹ️ Sets the PORT for our app to have access to it. If no env has been set, we hard code it to 5005
 const PORT = process.env.PORT || 5005;
