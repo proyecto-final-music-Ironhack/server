@@ -14,7 +14,7 @@ const saltRounds = 10;
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup/:type", (req, res, next) => {
-  const { email, password, name, username } = req.body;
+  const { email, password, name, username, idFromAPI } = req.body;
   const { type } = req.params;
 
   if (email === "" || password === "" || name === "") {
@@ -79,29 +79,32 @@ router.post("/signup/:type", (req, res, next) => {
         res.status(201).json(dj);
       });
   } else if (type === "disco") {
-    Disco.findOne({ email })
+    Disco.findOne({ idFromAPI })
       .then((foundDisco) => {
-        if (foundDisco) {
-          res.status(400).json({ message: "Disco already exists." });
+        if (!foundDisco) {
+          res
+            .status(400)
+            .json({ message: "Disco no existe, contacta con nosotros." });
           return;
         }
         // If email is unique, proceed to hash the password
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(password, salt);
         // Create the new disco in the database
-        return Disco.create({
-          email,
-          password: hashedPassword,
-          name,
-          username,
-        });
+        return Disco.findOneAndUpdate(
+          { idFromAPI },
+          {
+            email,
+            password: hashedPassword,
+          }
+        );
       })
-      .then((createdDisco) => {
+      .then((updatedDisco) => {
         // Deconstruct the newly created disco object to omit the password
         // We should never expose passwords publicly
-        const { email, name, _id, username } = createdDisco;
+        const { email, name, _id, idFromAPI } = updatedDisco;
         // Create a new object that doesn't expose the password
-        const disco = { email, name, _id, username };
+        const disco = { email, name, _id, idFromAPI };
         res.status(201).json(disco);
       });
   } else {
