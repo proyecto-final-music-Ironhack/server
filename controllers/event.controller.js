@@ -2,7 +2,7 @@ const Event = require("../models/Event.model");
 
 module.exports.create = async (req, res, next) => {
   try {
-    if (!req.body.name) return res.status(400).json({ mensage: "Bad request" });
+    if (!req.body.name) return res.status(400).json({ message: "Bad request" });
     const event = await Event.create(req.body);
     return res.status(201).json(event);
   } catch (err) {

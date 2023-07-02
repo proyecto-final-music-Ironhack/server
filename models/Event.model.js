@@ -33,10 +33,7 @@ const EventSchema = new Schema({
     type: Number,
     required: true,
   },
-  startTime: {
-    type: Date,
-    required: true,
-  },
+  startTime: String,
 });
 
 module.exports = model("Event", EventSchema);
