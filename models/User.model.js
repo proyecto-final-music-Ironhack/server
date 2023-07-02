@@ -18,6 +18,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
+    reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
     username: {
       type: String,
       required: [true, "Username is required"],
