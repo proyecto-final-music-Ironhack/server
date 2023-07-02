@@ -2,7 +2,7 @@ const Review = require("../models/Review.model");
 
 module.exports.create = async (req, res, next) => {
   try {
-    if (!req.body.nameUser)
+    if (!req.body.message)
       return res.status(400).json({ mensage: "Bad request" });
     const review = await Review.create(req.body);
     return res.status(201).json(review);
