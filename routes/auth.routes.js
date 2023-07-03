@@ -79,12 +79,16 @@ router.post("/signup/:type", (req, res, next) => {
         if (!foundDisco) {
           res.status(400).json({
             message:
-              "Tu discoteca no está registrada en nuestra base de datos, por favor contáctanos",
+
+              "Your club is not registered in our database, please contact with us",
           });
           return;
         }
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(password, salt);
+
+        // Update its info adding email and hashed password
+
         return Disco.findOneAndUpdate(
           { idFromAPI },
           {
@@ -106,7 +110,78 @@ router.post("/signup/:type", (req, res, next) => {
   }
 });
 
-// GET  /auth/verify  -  Se utiliza para verificar el token JWT almacenado en el cliente
+router.post("/login/:type", (req, res, next) => {
+  const { type } = req.params;
+  const { password, email } = req.body;
+  if (!email || !password) {
+    res.status(400).json({ message: "Provide email and password" });
+    return;
+  }
+  if (type === "user") {
+    User.findOne({ email })
+      .then((foundUser) => {
+        if (!foundUser) {
+          res.status(401).json({ message: "User not found." });
+          return;
+        }
+        if (bcrypt.compareSync(password, foundUser.password)) {
+          const { _id, email, username } = foundUser;
+          const payload = { _id, email, username };
+          const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          });
+          res.json({ authToken });
+        } else {
+          res.status(401).json({ message: "Unable to authenticate the user" });
+        }
+      })
+      .catch((err) => next(err));
+  } else if (type === "dj") {
+    Dj.findOne({ email })
+      .then((foundedDj) => {
+        if (!foundedDj) {
+          res.status(401).json({ message: "User not found." });
+          return;
+        }
+        if (bcrypt.compareSync(password, foundedDj.password)) {
+          const { _id, email, username } = foundedDj;
+          const payload = { _id, email, username };
+          const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          });
+          res.json({ authToken });
+        } else {
+          res.status(401).json({ message: "Unable to authenticate the user" });
+        }
+      })
+      .catch((err) => next(err));
+  } else if (type === "disco") {
+    Disco.findOne({ email })
+      .then((foundedDisco) => {
+        if (!foundedDisco) {
+          res.status(401).json({ message: "User not found." });
+          return;
+        }
+        if (bcrypt.compareSync(password, foundedDisco.password)) {
+          const { _id, email, username } = foundedDisco;
+          const payload = { _id, email, username };
+          const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          });
+          res.json({ authToken });
+        } else {
+          res.status(401).json({ message: "Unable to authenticate the user" });
+        }
+      })
+      .catch((err) => next(err));
+  }
+});
+
+// GET  /auth/verify  -  Used to verify JWT stored on the client
+
 router.get("/verify", isAuthenticated, (req, res, next) => {
   console.log(`req.payload`, req.payload);
   res.status(200).json(req.payload);
