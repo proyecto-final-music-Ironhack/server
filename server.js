@@ -33,10 +33,10 @@ const mailOptions = {
   html: htmlContent, //texto a enviar
 };
 
-const sendMail = transporter.sendMail(mailOptions, (error, info) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Correo enviado:" + info.response);
-  }
-});
+// const sendMail = transporter.sendMail(mailOptions, (error, info) => {
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log("Correo enviado:" + info.response);
+//   }
+// });
