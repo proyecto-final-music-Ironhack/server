@@ -34,7 +34,7 @@ router.post("/signup/:type", (req, res, next) => {
     });
     return;
   }
-  
+
   // Check the users collection if a user with the same email already exists
 
   if (type == "user") {
@@ -78,14 +78,16 @@ router.post("/signup/:type", (req, res, next) => {
     Disco.findOne({ idFromAPI })
       .then((foundDisco) => {
         if (!foundDisco) {
-          res
-            .status(400)
-            .json({ message: "Your club is not registered in our database, please contact with us" });
+          res.status(400).json({
+            message:
+              "Your club is not registered in our database, please contact with us",
+          });
           return;
         }
         // If Disco matches one from our database...
         const salt = bcrypt.genSaltSync(saltRounds);
         const hashedPassword = bcrypt.hashSync(password, salt);
+        console.log('HASHED PASS', hashedPassword);
         // Update its info adding email and hashed password
         return Disco.findOneAndUpdate(
           { idFromAPI },
@@ -102,6 +104,76 @@ router.post("/signup/:type", (req, res, next) => {
       });
   } else {
     res.status(400).json({ message: "Invalid type specified." });
+  }
+});
+
+router.post("/login/:type", (req, res, next) => {
+  const { type } = req.params;
+  const { password, email } = req.body;
+  if (!email || !password) {
+    res.status(400).json({ message: "Provide email and password" });
+    return;
+  }
+  if (type === "user") {
+    User.findOne({ email })
+      .then((foundUser) => {
+        if (!foundUser) {
+          res.status(401).json({ message: "User not found." });
+          return;
+        }
+        if (bcrypt.compareSync(password, foundUser.password)) {
+          const { _id, email, username } = foundUser;
+          const payload = { _id, email, username };
+          const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          });
+          res.json({ authToken });
+        } else {
+          res.status(401).json({ message: "Unable to authenticate the user" });
+        }
+      })
+      .catch((err) => next(err));
+  } else if (type === "dj") {
+    Dj.findOne({ email })
+      .then((foundedDj) => {
+        if (!foundedDj) {
+          res.status(401).json({ message: "User not found." });
+          return;
+        }
+        if (bcrypt.compareSync(password, foundedDj.password)) {
+          const { _id, email, username } = foundedDj;
+          const payload = { _id, email, username };
+          const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          });
+          res.json({ authToken });
+        } else {
+          res.status(401).json({ message: "Unable to authenticate the user" });
+        }
+      })
+      .catch((err) => next(err));
+  } else if (type === "disco") {
+    Disco.findOne({ email })
+      .then((foundedDisco) => {
+        if (!foundedDisco) {
+          res.status(401).json({ message: "User not found." });
+          return;
+        }
+        if (bcrypt.compareSync(password, foundedDisco.password)) {
+          const { _id, email, username } = foundedDisco;
+          const payload = { _id, email, username };
+          const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
+            algorithm: "HS256",
+            expiresIn: "6h",
+          });
+          res.json({ authToken });
+        } else {
+          res.status(401).json({ message: "Unable to authenticate the user" });
+        }
+      })
+      .catch((err) => next(err));
   }
 });
 

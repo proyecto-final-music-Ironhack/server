@@ -22,7 +22,7 @@ module.exports.detail = async (req, res, next) => {
 
 module.exports.update = async (req, res, next) => {
   try {
-    fileUploader.single("image")
+    await fileUploader.single("image")
     const { id } = req.params;
     const data = {...req.body}
     if(req.file) {
