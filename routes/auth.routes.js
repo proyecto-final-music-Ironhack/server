@@ -79,7 +79,6 @@ router.post("/signup/:type", (req, res, next) => {
         if (!foundDisco) {
           res.status(400).json({
             message:
-
               "Your club is not registered in our database, please contact with us",
           });
           return;
