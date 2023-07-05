@@ -2,9 +2,6 @@ const express = require("express");
 const router = express.Router();
 const djController = require("../controllers/dj.controller");
 
-//POST CREATE DJ
-router.post("/create", djController.create);
-
 // GET ALL DJs
 router.get("/", djController.list);
 
