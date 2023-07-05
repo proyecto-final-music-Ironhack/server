@@ -30,7 +30,7 @@ const userSchema = new Schema(
     },
     favoriteArtists: [Object],
     attendedEvents: [{ type: Schema.Types.ObjectId, ref: "Event" }],
-    savedSongs: [Object],
+    savedSongs: [{type: Schema.Types.ObjectId, ref: "Playlist"}],
     notification: {
       type: Boolean,
       default: false,
