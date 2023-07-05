@@ -34,6 +34,15 @@ const EventSchema = new Schema({
     required: true,
   },
   startTime: String,
+  playlist: {
+    name: String,
+    tracks: [
+      {
+        trackName: String,
+        likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+      },
+    ],
+  },
 });
 
 module.exports = model("Event", EventSchema);
