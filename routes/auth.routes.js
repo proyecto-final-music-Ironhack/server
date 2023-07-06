@@ -182,7 +182,7 @@ router.post("/login/:type", (req, res, next) => {
 // GET  /auth/verify  -  Used to verify JWT stored on the client
 
 router.get("/verify", isAuthenticated, (req, res, next) => {
-  console.log(`req.payload`, req.payload);
+  
   res.status(200).json(req.payload);
 });
 

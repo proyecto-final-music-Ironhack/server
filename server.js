@@ -29,15 +29,9 @@ const transporter = nodemailer.createTransport({
 
 const mailOptions = {
   from: "rizzomueye@gmail.com", //tu cuenta de gmail
-  to: "xijed59757@dotvilla.com", //Un ejemplo de correo al que quieres que llegue tu email
+  to: "cehaso2518@dotvilla.com", //Un ejemplo de correo al que quieres que llegue tu email
   subject: "Correo de prueba desde html",
   html: htmlContent, //texto a enviar
 };
 
-// const sendMail = transporter.sendMail(mailOptions, (error, info) => {
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log("Correo enviado:" + info.response);
-//   }
-// });
+
