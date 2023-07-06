@@ -128,7 +128,7 @@ router.post("/login/:type", (req, res, next) => {
           const payload = { _id, email, username };
           const authToken = jwt.sign(payload, process.env.TOKEN_SECRET, {
             algorithm: "HS256",
-            expiresIn: "6h",
+            expiresIn: "1d",
           });
           res.json({ authToken });
         } else {
@@ -182,7 +182,6 @@ router.post("/login/:type", (req, res, next) => {
 // GET  /auth/verify  -  Used to verify JWT stored on the client
 
 router.get("/verify", isAuthenticated, (req, res, next) => {
-  
   res.status(200).json(req.payload);
 });
 
