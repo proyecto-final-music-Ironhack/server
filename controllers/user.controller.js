@@ -1,5 +1,4 @@
 const User = require("../models/User.model");
-const fileUploader = require("../config/cloudinary.config");
 
 module.exports.list = async (req, res, next) => {
   try {
@@ -22,7 +21,6 @@ module.exports.detail = async (req, res, next) => {
 
 module.exports.update = async (req, res, next) => {
   try {
-    await fileUploader.single("image");
     const { id } = req.params;
     const data = { ...req.body };
     if (req.file) {
