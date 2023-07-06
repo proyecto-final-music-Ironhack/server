@@ -8,7 +8,5 @@ router.use("/events", isAuthenticated, require("./event.routes"));
 router.use("/users", isAuthenticated, require("./user.routes"));
 router.use("/djs", isAuthenticated, require("./dj.routes"));
 router.use("/reviews", isAuthenticated, require("./review.routes"));
-
-
-router.use("/spotify", require("./spotify.routes"));
+router.use("/spotify", isAuthenticated, require("./spotify.routes"));
 module.exports = router;
