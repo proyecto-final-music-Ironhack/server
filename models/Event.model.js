@@ -27,7 +27,7 @@ const EventSchema = new Schema({
     type: String,
     required: [true, "Genre is required."],
   },
-  reviews: String,
+  reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   drinksWithEntry: Number,
   priceOfEntry: {
     type: Number,
@@ -36,12 +36,7 @@ const EventSchema = new Schema({
   startTime: String,
   playlist: {
     name: String,
-    tracks: [
-      {
-        trackName: String,
-        likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-      },
-    ],
+    tracks: [{ type: Schema.Types.ObjectId, ref: "Track" }],
   },
 });
 
