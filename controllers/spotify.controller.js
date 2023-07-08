@@ -26,18 +26,50 @@ module.exports.playlists = async (req, res, next) => {
 
 module.exports.playlist = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const data = await spotifyApi.getPlaylist(id);
-    const playlist = data.body;
-    return res.status(200).json(playlist);
+    const { playlistId, eventId } = req.params;
+    const playlist = await spotifyApi.getPlaylist(playlistId);
+    const rawTracks = playlist.body.tracks.items;
+
+    const tracksInfo = rawTracks
+      .map((elm) => {
+        const { track } = elm;
+        const artists = track.artists.map((artist) => artist.name);
+        const image = track.album.images[2].url;
+        const trackName = track.name;
+
+        return {
+          artists,
+          image,
+          trackName,
+        };
+      })
+      .slice(0, 10);
+
+    const tracks = await Track.create(tracksInfo)
+      .then((tracksFromDB) => {
+        return Promise.all(
+          tracksFromDB.map((track) => {
+            return Event.findByIdAndUpdate(
+              eventId,
+              {
+                $push: { "playlist.tracks": track._id },
+              },
+              { new: true }
+            );
+          })
+        );
+      })
+      .catch((err) => console.error(err));
+
+    return res.status(201).json({ tracks });
   } catch (error) {
     next(error);
   }
 };
 
 module.exports.track = (req, res, next) => {
-  const { eventId, trackName } = req.body;
-  Track.create({ trackName })
+  const { eventId, trackName, image, artist } = req.body;
+  Track.create({ trackName, image, artist })
     .then((response) => {
       return Event.findByIdAndUpdate(
         eventId,
