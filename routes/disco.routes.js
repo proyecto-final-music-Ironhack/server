@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Disco = require("../models/Disco.model");
 const dataDiscos = require("../data.json");
 const discoController = require("../controllers/disco.controller");
+const { isAuthenticated } = require("../middleware/jwt.middleware");
 
 //POST CREATE DISCOS
 router.post("/create-list", discoController.createList);
@@ -13,7 +14,7 @@ router.post("/create", discoController.create);
 router.get("/", discoController.list);
 
 //GET ID
-router.get("/:id", discoController.detail);
+router.get("/:id", isAuthenticated, discoController.detail);
 
 //PUT UPDATE DISCO
 

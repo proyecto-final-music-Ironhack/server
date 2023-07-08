@@ -2,7 +2,7 @@ const express = require("express");
 const { isAuthenticated } = require("../middleware/jwt.middleware");
 const router = express.Router();
 
-router.use("/disco", isAuthenticated, require("./disco.routes"));
+router.use("/disco", require("./disco.routes"));
 router.use("/auth", require("./auth.routes"));
 router.use("/events", isAuthenticated, require("./event.routes"));
 router.use("/users", isAuthenticated, require("./user.routes"));
