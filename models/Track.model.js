@@ -7,7 +7,18 @@ const trackSchema = new Schema(
       required: true,
     },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    image: {
+      type: String,
+      required: true,
+    },
+    artists: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
   },
+
   {
     timestamps: true,
   }
