@@ -12,7 +12,7 @@ module.exports.create = async (req, res, next) => {
 
 module.exports.list = async (req, res, next) => {
   try {
-    const EventList = await Event.find();
+    const EventList = await Event.find().populate("disco").populate("dj");
     return res.status(200).json(EventList);
   } catch (err) {
     next(err);
