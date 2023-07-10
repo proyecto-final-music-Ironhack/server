@@ -17,7 +17,7 @@ const EventSchema = new Schema(
     },
     dj: {
       type: Schema.Types.ObjectId,
-      ref: "DJ",
+      ref: "Dj",
     },
     checks: {
       type: Number,
