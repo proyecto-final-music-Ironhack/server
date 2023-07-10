@@ -74,7 +74,7 @@ router.post("/signup/:type", (req, res, next) => {
         res.status(500).json({ message: "Error al crear el DJ" });
       });
   } else if (type === "disco") {
-    Disco.findOne({ idFromAPI })
+    Disco.findOne({ name })
       .then((foundDisco) => {
         if (!foundDisco) {
           res.status(400).json({
@@ -89,7 +89,7 @@ router.post("/signup/:type", (req, res, next) => {
         // Update its info adding email and hashed password
 
         return Disco.findOneAndUpdate(
-          { idFromAPI },
+          { name },
           {
             email,
             password: hashedPassword,
@@ -97,8 +97,8 @@ router.post("/signup/:type", (req, res, next) => {
         );
       })
       .then((updatedDisco) => {
-        const { email, name, _id, idFromAPI } = updatedDisco;
-        const disco = { email, name, _id, idFromAPI };
+        const { email, name, _id } = updatedDisco;
+        const disco = { email, name, _id };
         res.status(201).json(disco);
       })
       .catch((error) => {
