@@ -7,6 +7,11 @@ const DiscoSchema = new Schema(
       type: String,
       required: [true, "Password is required."],
     },
+    image: {
+      type: String,
+      default:
+        "https://www.comunidad.madrid/sites/default/files/styles/image_style_16_9/public/aud/turismo/dj.jpg?itok=3lOewu3H",
+    },
     idFromAPI: String,
     name: String,
     address: String,
@@ -20,6 +25,24 @@ const DiscoSchema = new Schema(
       type: Number,
       default: 0,
     },
+    genre: [
+      {
+        type: String,
+        enum: [
+          "Jazz",
+          "Soul",
+          "Pop",
+          "Rock and Roll",
+          "Techno",
+          "Reggeaton",
+          "Hip Hop/Rap",
+          "Funk",
+          "Metal",
+          "Salsa",
+          "Country",
+        ],
+      },
+    ],
   },
   {
     timestamps: true,
