@@ -1,4 +1,6 @@
 const User = require("../models/User.model");
+const Dj = require("../models/Dj.model");
+const Disco = require("../models/Disco.model");
 
 module.exports.list = async (req, res, next) => {
   try {
@@ -11,9 +13,14 @@ module.exports.list = async (req, res, next) => {
 
 module.exports.detail = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-    return res.status(200).json(user);
+    const { email } = req.payload;
+
+    const user = await User.findOne({email});
+    const dj = await Dj.findOne({email});
+    const disco = await Disco.findOne({email});
+
+    const foundUser = user || dj || disco;
+    return res.status(200).json(foundUser);
   } catch (error) {
     next(error);
   }
