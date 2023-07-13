@@ -9,9 +9,9 @@ const DiscoSchema = new Schema(
     },
     image: {
       type: String,
-      default:
-        "https://www.comunidad.madrid/sites/default/files/styles/image_style_16_9/public/aud/turismo/dj.jpg?itok=3lOewu3H",
+      default: "https://www.comunidad.madrid/sites/default/files/styles/image_style_16_9/public/aud/turismo/dj.jpg?itok=3lOewu3H",
     },
+    events: [{ type: Schema.Types.ObjectId, ref: "Event" }],
     idFromAPI: String,
     name: String,
     address: String,
@@ -28,19 +28,7 @@ const DiscoSchema = new Schema(
     genre: [
       {
         type: String,
-        enum: [
-          "Jazz",
-          "Soul",
-          "Pop",
-          "Rock and Roll",
-          "Techno",
-          "Reggeaton",
-          "Hip Hop/Rap",
-          "Funk",
-          "Metal",
-          "Salsa",
-          "Country",
-        ],
+        enum: ["Jazz", "Soul", "Pop", "Rock and Roll", "Techno", "Reggeaton", "Hip Hop/Rap", "Funk", "Metal", "Salsa", "Country"],
       },
     ],
   },

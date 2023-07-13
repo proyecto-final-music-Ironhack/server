@@ -1,13 +1,25 @@
 const Event = require("../models/Event.model");
+const Disco = require("../models/Disco.model");
 
-module.exports.create = async (req, res, next) => {
-  try {
-    if (!req.body.name) return res.status(400).json({ message: "Bad request" });
-    const event = await Event.create(req.body);
-    return res.status(201).json(event);
-  } catch (err) {
-    next(err);
-  }
+// module.exports.create = async (req, res, next) => {
+//   try {
+//     if (!req.body.name) return res.status(400).json({ message: "Bad request" });
+//     const event = await Event.create(req.body);
+//     return res.status(201).json(event);
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
+module.exports.create = (req, res, next) => {
+  const { _id } = req.payload;
+  // deja todo lo que te venga de req.body y a la propiedad disco asignale _id
+  Event.create({...req.body, disco: _id})
+    .then((event) => {
+      return Disco.findByIdAndUpdate(_id, { $push: { events: event._id } }, { new: true });
+    })
+    .then((response) => res.json({ response }))
+    .catch((err) => next(err));
 };
 
 module.exports.list = async (req, res, next) => {
