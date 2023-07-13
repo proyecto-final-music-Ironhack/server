@@ -17,10 +17,13 @@ router.get("/", discoController.list);
 router.get("/:id", isAuthenticated, discoController.detail);
 
 //PUT UPDATE DISCO
-
 router.put("/:id", discoController.update);
 
-// DELETE DISCO
+//PUT UPDATE FOLLOWERS
+router.put("/:id/add-follower", discoController.addFollower);
+router.put("/:id/remove-follower", discoController.removeFollower);
+
+//DELETE DISCO
 router.delete("/:id/delete", discoController.delete);
 
 module.exports = router;
