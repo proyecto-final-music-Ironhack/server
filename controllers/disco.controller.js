@@ -32,7 +32,12 @@ module.exports.list = async (req, res, next) => {
 module.exports.detail = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const discoId = await Disco.findById(id);
+    const discoId = await Disco.findById(id).populate({
+      path: "events",
+      populate: {
+        path: "dj",
+      },
+    });
     return res.status(200).json(discoId);
   } catch (err) {
     next(err);
@@ -54,11 +59,7 @@ module.exports.update = async (req, res, next) => {
 module.exports.addFollower = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const disco = await Disco.findByIdAndUpdate(
-      id,
-      { $inc: { followers: 1 } },
-      { new: true }
-    );
+    const disco = await Disco.findByIdAndUpdate(id, { $inc: { followers: 1 } }, { new: true });
     return res.status(200).json({ followers: disco.followers });
   } catch (err) {
     next(err);
@@ -70,11 +71,7 @@ module.exports.removeFollower = async (req, res, next) => {
     const { id } = req.params;
     const disco = await Disco.findById(id);
     if (disco && disco.followers > 0) {
-      const updatedDisco = await Disco.findByIdAndUpdate(
-        id,
-        { $inc: { followers: -1 } },
-        { new: true }
-      );
+      const updatedDisco = await Disco.findByIdAndUpdate(id, { $inc: { followers: -1 } }, { new: true });
       return res.status(200).json({ followers: updatedDisco.followers });
     }
   } catch (err) {
