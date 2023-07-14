@@ -32,12 +32,12 @@ module.exports.update = async (req, res, next) => {
 module.exports.addFollower = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const disco = await Disco.findByIdAndUpdate(
+    const dj = await Dj.findByIdAndUpdate(
       id,
       { $inc: { followers: 1 } },
       { new: true }
     );
-    return res.status(200).json({ followers: disco.followers });
+    return res.status(200).json({ followers: dj.followers });
   } catch (err) {
     next(err);
   }
