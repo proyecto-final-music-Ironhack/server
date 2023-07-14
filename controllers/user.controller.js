@@ -15,10 +15,14 @@ module.exports.detail = async (req, res, next) => {
   try {
     const { email } = req.payload;
 
-    const user = await User.findOne({email});
-    const dj = await Dj.findOne({email});
-    const disco = await Disco.findOne({email});
-
+    const user = await User.findOne({ email });
+    const dj = await Dj.findOne({ email });
+    const disco = await Disco.findOne({ email }).populate({
+      path: "events",
+      populate: {
+        path: "dj",
+      },
+    });
     const foundUser = user || dj || disco;
     return res.status(200).json(foundUser);
   } catch (error) {
