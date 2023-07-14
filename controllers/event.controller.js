@@ -14,9 +14,13 @@ const Disco = require("../models/Disco.model");
 module.exports.create = (req, res, next) => {
   const { _id } = req.payload;
   // deja todo lo que te venga de req.body y a la propiedad disco asignale _id
-  Event.create({...req.body, disco: _id})
+  Event.create({ ...req.body, disco: _id })
     .then((event) => {
-      return Disco.findByIdAndUpdate(_id, { $push: { events: event._id } }, { new: true });
+      return Disco.findByIdAndUpdate(
+        _id,
+        { $push: { events: event._id } },
+        { new: true }
+      );
     })
     .then((response) => res.json({ response }))
     .catch((err) => next(err));
@@ -34,7 +38,7 @@ module.exports.list = async (req, res, next) => {
 module.exports.detail = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const eventId = await Event.findById(id);
+    const eventId = await Event.findById(id).populate("disco").populate("dj");
     return res.status(200).json(eventId);
   } catch (err) {
     next(err);
