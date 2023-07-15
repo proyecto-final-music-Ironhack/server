@@ -28,8 +28,15 @@ module.exports.create = (req, res, next) => {
 
 module.exports.list = async (req, res, next) => {
   try {
-    const EventList = await Event.find().populate("disco").populate("dj");
-    return res.status(200).json(EventList);
+    let eventList;
+    if (req.query.djId) {
+      eventList = await Event.find({ dj: req.query.djId })
+        .populate("disco")
+        .populate("dj");
+    } else {
+      eventList = await Event.find().populate("disco").populate("dj");
+    }
+    return res.status(200).json(eventList);
   } catch (err) {
     next(err);
   }
