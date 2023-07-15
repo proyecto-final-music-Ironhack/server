@@ -16,13 +16,9 @@ module.exports.create = (req, res, next) => {
   // deja todo lo que te venga de req.body y a la propiedad disco asignale _id
   Event.create({ ...req.body, disco: _id })
     .then((event) => {
-      return Disco.findByIdAndUpdate(
-        _id,
-        { $push: { events: event._id } },
-        { new: true }
-      );
+      return Disco.findByIdAndUpdate(_id, { $push: { events: event._id } }, { new: true });
     })
-    .then((response) => res.json({ response }))
+    .then((response) => res.json({ message: "event successfully created" }))
     .catch((err) => next(err));
 };
 
@@ -30,9 +26,7 @@ module.exports.list = async (req, res, next) => {
   try {
     let eventList;
     if (req.query.djId) {
-      eventList = await Event.find({ dj: req.query.djId })
-        .populate("disco")
-        .populate("dj");
+      eventList = await Event.find({ dj: req.query.djId }).populate("disco").populate("dj");
     } else {
       eventList = await Event.find().populate("disco").populate("dj");
     }
@@ -45,7 +39,7 @@ module.exports.list = async (req, res, next) => {
 module.exports.detail = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const eventId = await Event.findById(id).populate("disco").populate("dj");
+    const eventId = await Event.findById(id).populate("disco").populate("dj").populate("playlist")
     return res.status(200).json(eventId);
   } catch (err) {
     next(err);
