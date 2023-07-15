@@ -52,7 +52,7 @@ module.exports.playlist = async (req, res, next) => {
             return Event.findByIdAndUpdate(
               eventId,
               {
-                $push: { "playlist.tracks": track._id },
+                $push: { playlist: track._id },
               },
               { new: true }
             );
@@ -67,21 +67,21 @@ module.exports.playlist = async (req, res, next) => {
   }
 };
 
-module.exports.track = (req, res, next) => {
-  const { eventId, trackName, image, artist } = req.body;
-  Track.create({ trackName, image, artist })
-    .then((response) => {
-      return Event.findByIdAndUpdate(
-        eventId,
-        {
-          $push: { "playlist.tracks": response._id },
-        },
-        { new: true }
-      );
-    })
-    .then((response) => res.json({ response }))
-    .catch((err) => next(err));
-};
+// module.exports.track = (req, res, next) => {
+//   const { eventId, trackName, image, artist } = req.body;
+//   Track.create({ trackName, image, artist })
+//     .then((response) => {
+//       return Event.findByIdAndUpdate(
+//         eventId,
+//         {
+//           $push: { "playlist.tracks": response._id },
+//         },
+//         { new: true }
+//       );
+//     })
+//     .then((response) => res.json({ response }))
+//     .catch((err) => next(err));
+// };
 
 module.exports.trackLike = async (req, res, next) => {
   try {

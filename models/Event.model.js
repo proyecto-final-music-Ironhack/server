@@ -34,10 +34,7 @@ const EventSchema = new Schema(
       required: true,
     },
     startTime: String,
-    playlist: {
-      name: String,
-      tracks: [{ type: Schema.Types.ObjectId, ref: "Track" }],
-    },
+    playlist: [{ type: Schema.Types.ObjectId, ref: "Track" }],
   },
   {
     timestamps: true,
