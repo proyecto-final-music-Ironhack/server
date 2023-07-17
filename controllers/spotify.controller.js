@@ -86,7 +86,7 @@ module.exports.playlist = async (req, res, next) => {
 module.exports.trackLike = async (req, res, next) => {
   try {
     const { _id } = req.payload;
-    const { trackId } = req.body;
+    const { trackId } = req.params;
     const addUser = await Track.findByIdAndUpdate(
       trackId,
       { $push: { likes: _id } },
@@ -101,7 +101,7 @@ module.exports.trackLike = async (req, res, next) => {
 module.exports.trackDislike = async (req, res, next) => {
   try {
     const { _id } = req.payload;
-    const { trackId } = req.body;
+    const { trackId } = req.params;
     const removeUser = await Track.findByIdAndUpdate(
       trackId,
       { $pull: { likes: _id } },
