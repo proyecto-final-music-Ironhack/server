@@ -10,9 +10,7 @@ const spotifyApi = new SpotifyWebApi({
 spotifyApi
   .clientCredentialsGrant()
   .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
-  .catch((error) =>
-    console.error("Something went wrong when retrieving an access token", error)
-  );
+  .catch((error) => console.error("Something went wrong when retrieving an access token", error));
 
 module.exports.playlists = async (req, res, next) => {
   try {
@@ -87,26 +85,39 @@ module.exports.trackLike = async (req, res, next) => {
   try {
     const { _id } = req.payload;
     const { trackId } = req.params;
-    const addUser = await Track.findByIdAndUpdate(
-      trackId,
-      { $push: { likes: _id } },
-      { new: true }
-    );
+    const addUser = await Track.findByIdAndUpdate(trackId, { $push: { likes: _id } }, { new: true });
     return res.status(200).json(addUser);
   } catch (error) {
     next(error);
   }
 };
 
+module.exports.trackLike = (req, res, next) => {
+  const { _id } = req.payload;
+  const { trackId } = req.params;
+  Track.findById(trackId)
+    .then((track) => {
+      const likes = track.likes;
+      const userExists = likes.some((user) => {
+        if (user === _id) {
+          return true;
+        }
+      });
+      if (userExists) {
+        return res.json({ message: "User already liked" });
+      } else {
+        return Track.findByIdAndUpdate(trackId, { $push: { likes: _id } }, { new: true });
+      }
+    })
+    .then(() => res.status(200).json({ message: "User liked successfully" }))
+    .catch((error) => console.error(error));
+};
+
 module.exports.trackDislike = async (req, res, next) => {
   try {
     const { _id } = req.payload;
     const { trackId } = req.params;
-    const removeUser = await Track.findByIdAndUpdate(
-      trackId,
-      { $pull: { likes: _id } },
-      { new: true }
-    );
+    const removeUser = await Track.findByIdAndUpdate(trackId, { $pull: { likes: _id } }, { new: true });
     return res.status(200).json(removeUser);
   } catch (error) {
     next(error);

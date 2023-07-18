@@ -11,6 +11,9 @@ router.get("/user-profile", userController.detail);
 // EDIT USER
 router.put("/:id", userController.update);
 
+// ADD CHECKED EVENT 
+router.put("/check-in/:eventId", userController.checkedEvent)
+
 //POST DELETE USER
 router.delete("/:id/delete", userController.delete);
 
