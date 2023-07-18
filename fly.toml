@@ -6,8 +6,11 @@
 app = "beat"
 primary_region = "mad"
 
+[env]
+PORT = "8080"
+
 [http_service]
-  internal_port = 3000
+  internal_port = 8080
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
