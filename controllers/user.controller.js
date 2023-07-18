@@ -15,7 +15,7 @@ module.exports.detail = async (req, res, next) => {
   try {
     const { email } = req.payload;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("attendedEvents");
     const dj = await Dj.findOne({ email });
     const disco = await Disco.findOne({ email }).populate({
       path: "events",
@@ -25,6 +25,17 @@ module.exports.detail = async (req, res, next) => {
     });
     const foundUser = user || dj || disco;
     return res.status(200).json(foundUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.checkedEvent = async (req, res, next) => {
+  try {
+    const { eventId } = req.params;
+    const { _id } = req.payload;
+    const addCheckedEvent = await User.findByIdAndUpdate(_id, { $push: { attendedEvents: eventId } }, { new: true });
+    return res.status(200).json(addCheckedEvent);
   } catch (error) {
     next(error);
   }
