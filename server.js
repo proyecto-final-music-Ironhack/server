@@ -6,10 +6,10 @@ const fs = require("fs"); //es un modulo de Node que nos permite leer archivos
 const htmlContent = fs.readFileSync("./email.html", "utf8");
 
 // ℹ️ Sets the PORT for our app to have access to it. If no env has been set, we hard code it to 5005
-const PORT = process.env.PORT || 5005;
+const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, () => {
-  console.log(`Server listening on http://localhost:${PORT}`);
+let server = app.listen(PORT, "0.0.0.0", function () {
+  console.log("App listening on port " + server.address().port);
 });
 
 const transporter = nodemailer.createTransport({
@@ -33,5 +33,3 @@ const mailOptions = {
   subject: "Correo de prueba desde html",
   html: htmlContent, //texto a enviar
 };
-
-
