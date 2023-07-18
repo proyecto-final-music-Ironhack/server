@@ -81,35 +81,20 @@ module.exports.playlist = async (req, res, next) => {
 //     .catch((err) => next(err));
 // };
 
-module.exports.trackLike = async (req, res, next) => {
-  try {
-    const { _id } = req.payload;
-    const { trackId } = req.params;
-    const addUser = await Track.findByIdAndUpdate(trackId, { $push: { likes: _id } }, { new: true });
-    return res.status(200).json(addUser);
-  } catch (error) {
-    next(error);
-  }
-};
-
 module.exports.trackLike = (req, res, next) => {
   const { _id } = req.payload;
   const { trackId } = req.params;
   Track.findById(trackId)
     .then((track) => {
       const likes = track.likes;
-      const userExists = likes.some((user) => {
-        if (user === _id) {
-          return true;
-        }
-      });
+      const userExists = likes.some((user) => user == _id);
       if (userExists) {
-        return res.json({ message: "User already liked" });
-      } else {
-        return Track.findByIdAndUpdate(trackId, { $push: { likes: _id } }, { new: true });
+        return res.status(400).json({ message: "User already liked" });
       }
+      return Track.findByIdAndUpdate(trackId, { $push: { likes: _id } }, { new: true }).then(() =>
+        res.status(200).json({ message: "User liked successfully" })
+      );
     })
-    .then(() => res.status(200).json({ message: "User liked successfully" }))
     .catch((error) => console.error(error));
 };
 
