@@ -15,7 +15,12 @@ module.exports.detail = async (req, res, next) => {
   try {
     const { email } = req.payload;
 
-    const user = await User.findOne({ email }).populate("attendedEvents");
+    const user = await User.findOne({ email }).populate({
+      path: "attendedEvents",
+      populate: {
+        path: "dj",
+      },
+    });
     const dj = await Dj.findOne({ email });
     const disco = await Disco.findOne({ email }).populate({
       path: "events",

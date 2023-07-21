@@ -9,7 +9,7 @@ const DiscoSchema = new Schema(
     },
     image: {
       type: String,
-      default: "https://www.comunidad.madrid/sites/default/files/styles/image_style_16_9/public/aud/turismo/dj.jpg?itok=3lOewu3H",
+      default: "https://i.pinimg.com/564x/09/62/f7/0962f71b0d30d722f0bc5dfe4fc32efe.jpg",
     },
     events: [{ type: Schema.Types.ObjectId, ref: "Event" }],
     idFromAPI: String,
