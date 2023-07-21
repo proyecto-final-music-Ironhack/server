@@ -10,7 +10,9 @@ const spotifyApi = new SpotifyWebApi({
 spotifyApi
   .clientCredentialsGrant()
   .then((data) => spotifyApi.setAccessToken(data.body["access_token"]))
-  .catch((error) => console.error("Something went wrong when retrieving an access token", error));
+  .catch((error) =>
+    console.error("Something went wrong when retrieving an access token", error)
+  );
 
 module.exports.playlists = async (req, res, next) => {
   try {
@@ -65,22 +67,6 @@ module.exports.playlist = async (req, res, next) => {
   }
 };
 
-// module.exports.track = (req, res, next) => {
-//   const { eventId, trackName, image, artist } = req.body;
-//   Track.create({ trackName, image, artist })
-//     .then((response) => {
-//       return Event.findByIdAndUpdate(
-//         eventId,
-//         {
-//           $push: { "playlist.tracks": response._id },
-//         },
-//         { new: true }
-//       );
-//     })
-//     .then((response) => res.json({ response }))
-//     .catch((err) => next(err));
-// };
-
 module.exports.trackLike = (req, res, next) => {
   const { _id } = req.payload;
   const { trackId } = req.params;
@@ -91,7 +77,11 @@ module.exports.trackLike = (req, res, next) => {
       if (userExists) {
         return res.status(400).json({ message: "User already liked" });
       }
-      return Track.findByIdAndUpdate(trackId, { $push: { likes: _id } }, { new: true }).then(() =>
+      return Track.findByIdAndUpdate(
+        trackId,
+        { $push: { likes: _id } },
+        { new: true }
+      ).then(() =>
         res.status(200).json({ message: "User liked successfully" })
       );
     })
@@ -102,7 +92,11 @@ module.exports.trackDislike = async (req, res, next) => {
   try {
     const { _id } = req.payload;
     const { trackId } = req.params;
-    const removeUser = await Track.findByIdAndUpdate(trackId, { $pull: { likes: _id } }, { new: true });
+    const removeUser = await Track.findByIdAndUpdate(
+      trackId,
+      { $pull: { likes: _id } },
+      { new: true }
+    );
     return res.status(200).json(removeUser);
   } catch (error) {
     next(error);
