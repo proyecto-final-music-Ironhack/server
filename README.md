@@ -2,7 +2,7 @@
 
 [Link to app](https://sprightly-vacherin-973f9f.netlify.app/)
 
-[Client repository](https://github.com/proyecto-final-music-Ironhack/client))
+[Client repository](https://github.com/proyecto-final-music-Ironhack/client)
 
 ### Authors
 
